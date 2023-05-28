@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<main class="container-fluid m-0 p-0">
+
+    {% for item in itemss  %}
+    <div class="card">
+        <div class="image"><span class="text">{{item.image}}</span></div>
+        <span class="title">{{item.name}}</span>   
+        <span class="price">{{item.price}}</span>
+    </div>
+    {% endfor %}
+</main>
+{% endblock content %}
+    
