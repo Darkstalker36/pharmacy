@@ -1,7 +1,7 @@
 from app import *
 
 with app.app_context():
-   db.drop_all()
+   # db.drop_all()
 
    db.create_all()
    # Project.__table__.drop(bind=db.engine)

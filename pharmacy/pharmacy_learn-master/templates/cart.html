@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% for item in orderItems %}
+<div class="master-container">
+  <div class="card cart">
+    <label class="title">{{item.name}}</label>
+    <div class="products">
+      <div class="order-img"><img class="img-fluid" src="{{url_for('static', filename='img/' + item.image)}}" alt=""></div>
+        <div>
+          <p>{{item.description}}</p>
+        </div>
+        <label class="price small">{{item.amount}} шт</label>
+        <label class="price small">{{item.total_price}} грн</label>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+  <div class="card checkout">
+    <label class="title">Чек</label>
+    <div class="details">
+      <span>Вартість:</span>
+      <span>{{ subtotal }}</span>
+      <span>Знижка:</span>
+      <span>{{ discount }}</span>
+      <span>Доставка:</span>
+      <span>{{ shipping }}</span>
+    </div>
+    <div class="checkout--footer">
+      <label class="price">{{ total }} грн</label>
+      <form method="post" action="/checkout" class="form">
+        <button type="submit">Замовити</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -1,3 +1,4 @@
+@import "bootstrap";
 body{
     min-height: 100vh;
     background: rgb(101,153,47);
@@ -71,8 +72,8 @@ svg {
 }
 
 .my-card-button:hover {
- border: 1px solid #d0ffa6;
- background-color: #d0ffa6;
+ border: 1px solid #49db2f;
+ background-color: #49db2f;
 }
 
 
@@ -303,3 +304,25 @@ svg {
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.15, 0.83, 0.66, 1);
   }
+
+.my-col {
+    position: relative;
+    left: 190px;
+  }
+
+  .btn-primary {
+    color: #212529;
+    background-color: hsla(93, 45%, 63%, 0);
+    border-color: #5bc2c200
+}
+
+.btn-primary:hover {
+    color: #212529;
+    background-color: #49db2f;
+    border-color: #49db2f
+}
+
+.order-img {
+    width: 50px;  
+    height: auto;  
+}

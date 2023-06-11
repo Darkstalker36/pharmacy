@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(200), nullable=False)
     age = db.Column(db.Integer, default=0)
     mobile = db.Column(db.String)
-    favorite = db.Column(db.Numeric)
+
 
 
     #Метод repr використовується для відображення об'єкта у зручному для читача форматі.
@@ -52,6 +52,17 @@ class OrderItem(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'))
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'))
     amount = db.Column(db.Integer, default = 1)
+    total_price = db.Column(db.Float)
+    image = db.Column(db.String)
+    name = db.Column(db.String)
+    description = db.Column(db.String)
+    
+    def set_amount(self, amount):
+        self.amount = amount
+
+    def set_total_price(self, total_price):
+        self.total_price = total_price
+
 
 
 

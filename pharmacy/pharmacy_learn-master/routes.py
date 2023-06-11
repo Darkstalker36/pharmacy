@@ -74,11 +74,79 @@ def error_404(err):
     return render_template('error404.html')
 
 
-@app.route("/order")
-def order():
-    return render_template('order.html')
+@app.route("/order/<item_id>")
+@login_required
+def order(item_id):
+    user = User.query.get(current_user.id)
+    order = Order.query.filter_by(user_id = current_user.id).first()
+    if order == None:
+        order = Order(user_id=current_user.id, adress='Lviv, Khotkevycha 99')
+        db.session.add(order)
+        db.session.commit()
+
+    item = Item.query.get(int(item_id))
+    orderItem = OrderItem.query.filter_by(order_id = order.id, item_id = item.id).first()
+    if orderItem == None:
+        orderItem = OrderItem(order_id = order.id, item_id = item.id, total_price = item.price, image = item.image, name = item.name, description = item.description)
+        db.session.add(orderItem)
+        db.session.commit()
+
+    return render_template('order.html', item = item, orderItem = orderItem, order = order, user = user)
+
+@app.route("/add", methods=["POST"])
+@login_required
+def add():
+    orderItem = OrderItem.query.get(request.form['order_item_id'])
+    orderItem.set_amount(request.form['order_item_amount'])
+    item = Item.query.get(orderItem.item_id)
+    user = User.query.get(current_user.id)
+    order = Order.query.filter_by(user_id = current_user.id).first()
+    orderItem.set_total_price(round(float(item.price) * int(orderItem.amount)))
+    orderItem.image = item.image
+    orderItem.name = item.name
+    orderItem.description = item.description
+    db.session.add(orderItem)
+    db.session.commit()
+    
+    return render_template('order.html', item = item, orderItem = orderItem, order = order, user = user)
+
 
 @app.route("/item/<item_id>")
 def itemInfo(item_id):#currentItem):
     item = Item.query.get(int(item_id))
     return render_template('item.html', item = item)
+
+@app.route("/cart")
+@login_required
+def cart():
+    user = User.query.get(current_user.id)
+    order = Order.query.filter_by(user_id = current_user.id).first()
+    if order == None:
+        order = Order(user_id=current_user.id, adress='Lviv, Khotkevycha 99')
+        db.session.add(order)
+        db.session.commit()
+
+    orderItems = OrderItem.query.filter_by(order_id = order.id).all()
+    subtotal = 0
+    for item in orderItems:
+        subtotal += item.total_price
+    discount = round(subtotal * 0.05, 2)
+    shipping = 75.99
+    total = round(subtotal - discount + shipping, 2)
+    return render_template('cart.html', orderItems = orderItems, order = order, user = user, subtotal = subtotal, discount = discount, shipping = shipping, total = total, )
+
+@app.route("/checkout", methods=["POST"])
+@login_required
+def checkout():
+    user = User.query.get(current_user.id)
+    order = Order.query.filter_by(user_id = current_user.id).first()
+    if order != None:
+        OrderItem.query.filter_by(order_id = order.id).delete()
+        Order.query.filter_by(user_id = current_user.id).delete()
+        db.session.commit()
+
+    return render_template('thanks.html', user = user)
+
+def Plus(quantity):
+    quantity+=1
+
